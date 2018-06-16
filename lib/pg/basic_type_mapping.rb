@@ -214,8 +214,8 @@ module PG::BasicTypeRegistry
 	# register_type 'citext', OID::Text.new
 	# register_type 'ltree', OID::Text.new
 	#
-	# register_type 'cidr', OID::Cidr.new
-	# alias_type 'inet', 'cidr'
+	register_type 0, 'inet', PG::TextEncoder::Inet, PG::TextDecoder::Inet
+	alias_type 0, 'cidr', 'inet'
 
 
 

@@ -1,6 +1,7 @@
 # -*- ruby -*-
 
 require 'json'
+require 'ipaddr'
 
 module PG
 	module TextEncoder
@@ -28,6 +29,21 @@ module PG
 		class JSON < SimpleEncoder
 			def encode(value)
 				::JSON.generate(value, quirks_mode: true)
+			end
+		end
+
+		class Inet < SimpleEncoder
+			def encode(value)
+				case value
+				when IPAddr
+					default_prefix = value.family == Socket::AF_INET ? 32 : 128
+					s = value.to_s
+					prefix = value.prefix
+					s << "/" << value.prefix.to_s if prefix != default_prefix
+					s
+				else
+					value
+				end
 			end
 		end
 	end
